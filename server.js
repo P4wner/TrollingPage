@@ -50,8 +50,13 @@ app.get('/notify', (req, res) => {
   res.json({ status: 'ok' })
 })
 
-const server = app.listen(port, () => {
+const server = app.listen(port, async () => {
   console.log(`Running on port ${port}`)
+
+  const webhookUrl = `https://${process.env.RAILWAY_PUBLIC_DOMAIN || process.env.RAILWAY_STATIC_URL || 'your-domain.up.railway.app'}/webhook`
+
+  await bot.telegram.setWebhook(webhookUrl)
+  console.log(`Webhook set to: ${webhookUrl}`)
 })
 
 server.on('upgrade', (request, socket, head) => {
@@ -88,4 +93,4 @@ bot.on('callback_query', (ctx) => {
   ctx.answerCbQuery()
 })
 
-bot.launch()
+app.use(bot.webhookCallback('/webhook'))
